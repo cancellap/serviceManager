@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SM.Application.DTOs
 {
-    public class ClienteDto
+    public  class ClienteSemEnderecoDto
     {
         public int Id { get; set; }
         public DateTime? CreatedAt { get; set; }
@@ -18,8 +17,5 @@ namespace SM.Application.DTOs
         public string NomeFantasia { get; set; }
         public string Email { get; set; }
         public string Cnpj { get; set; }
-        public EnderecoComplementoDto EnderecoComplementoDto { get; set; }
-        [JsonIgnore]
-        public ServicosDto ServicosDto { get; set; }
     }
 }

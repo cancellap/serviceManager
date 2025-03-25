@@ -28,7 +28,8 @@ namespace SM.Infra.Repositories
         {
             var cliente = _dBContext.Clientes
                 .Include(c => c.EnderecoComplemento)
-                .ThenInclude(ec => ec.Endereco) 
+                .ThenInclude(ec => ec.Endereco)
+                .Include(c => c.Servicos)
                 .FirstOrDefault(c => c.Id == id);
             return cliente;
         }

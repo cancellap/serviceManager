@@ -17,6 +17,8 @@ builder.Services.AddScoped<ClienteRepository>();
 builder.Services.AddScoped<EnderecoRepository>();
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<TecnicoRepository>();
+builder.Services.AddScoped<ServicosRepository>();
+builder.Services.AddScoped<IServicosRepository, ServicosRepository>();
 builder.Services.AddScoped<EnderecoComplementoRepository>();
 builder.Services.AddScoped<IEnderecoComplementoRepository, EnderecoComplementoRepository>();
 builder.Services.AddScoped<ITecnicoRepository, TecnicoRepository>();
@@ -25,6 +27,7 @@ builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<EnderecoService>();
 builder.Services.AddScoped<TecnicoService>();
+builder.Services.AddScoped<ServicosService>();
 builder.Services.AddScoped<ITecnicoService, TecnicoService>();
 builder.Services.AddAutoMapper(typeof(SM.Application.Mapping.Mapper));
 

@@ -13,11 +13,7 @@ namespace SM.Application.Service
         private readonly EnderecoService _enderecoService;
         private readonly EnderecoComplementoRepository _enderecoComplementoRepository;
 
-        public TecnicoService(
-            TecnicoRepository tecnicoRepository,
-            IMapper mapper,
-            EnderecoService enderecoService,
-            EnderecoComplementoRepository enderecoComplementoRepository)
+        public TecnicoService(TecnicoRepository tecnicoRepository, IMapper mapper, EnderecoService enderecoService, EnderecoComplementoRepository enderecoComplementoRepository)
         {
             _tecnicoRepository = tecnicoRepository;
             _mapper = mapper;

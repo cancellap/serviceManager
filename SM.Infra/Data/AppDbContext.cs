@@ -33,8 +33,8 @@ namespace SM.Infra.Data
                       .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(ec => ec.Endereco)
-                      .WithOne() // Relação 1:1
-                      .HasForeignKey<EnderecoComplemento>(ec => ec.EnderecoId)
+                      .WithMany()
+                      .HasForeignKey(ec => ec.EnderecoId)
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -89,7 +89,7 @@ namespace SM.Infra.Data
 
             modelBuilder.Entity<ServicoTecnico>()
                     .HasKey(ac => new { ac.TecnicoId, ac.ServicoId });
-            
+
             modelBuilder.Entity<Servicos>(entity =>
             {
                 entity.HasKey(s => s.Id);

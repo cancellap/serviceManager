@@ -1,41 +1,25 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 using SM.Application.DTOs;
 using SM.Application.Interfaces;
 using SM.Domaiin.Entities;
-using SM.Domaiin.Interfaces;
 using SM.Infra.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SM.Application.Service
 {
     public class ClienteService : IClienteService
     {
         private readonly ClienteRepository _clienteRepository;
-        private readonly EnderecoRepository _enderecoRepository;
         private readonly EnderecoComplementoRepository _enderecoComplementoRepository;
         private readonly EnderecoService _enderecoService;
         private readonly IMapper _mapper;
 
-        public ClienteService(
-            ClienteRepository clienteRepository,
-            EnderecoRepository enderecoRepository,
-            EnderecoComplementoRepository enderecoComplementoRepository,
-            EnderecoService enderecoService,
-            IMapper mapper)
+        public ClienteService(ClienteRepository clienteRepository, EnderecoComplementoRepository enderecoComplementoRepository, EnderecoService enderecoService, IMapper mapper)
         {
-            _clienteRepository = clienteRepository ?? throw new ArgumentNullException(nameof(clienteRepository));
-            _enderecoRepository = enderecoRepository ?? throw new ArgumentNullException(nameof(enderecoRepository));
-            _enderecoComplementoRepository = enderecoComplementoRepository ?? throw new ArgumentNullException(nameof(enderecoComplementoRepository));
-            _enderecoService = enderecoService ?? throw new ArgumentNullException(nameof(enderecoService));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _clienteRepository = clienteRepository;
+            _enderecoComplementoRepository = enderecoComplementoRepository;
+            _enderecoService = enderecoService;
+            _mapper = mapper;
         }
-
 
         public async Task<ClienteDto> CreateClienteAsync(ClienteCreateDto clienteCreateDto)
         {
@@ -61,7 +45,7 @@ namespace SM.Application.Service
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false
             };
-
+            Console.WriteLine("EnderecoComplemento: " + enderecoComplemento.EnderecoId + "  -  " + enderecoComplemento.Id + "  -  " + enderecoComplemento.ClienteId);
             await _enderecoComplementoRepository.AddAsync(enderecoComplemento);
 
             clienteCriado.EnderecoComplemento = enderecoComplemento;
