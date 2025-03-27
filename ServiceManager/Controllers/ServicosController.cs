@@ -34,11 +34,39 @@ namespace ServiceManager.Controllers
                 return StatusCode(500, $"Erro ao criar serviço: {ex.Message}");
             }
         }
+        [HttpPatch]
+        [Route("{idServico}/{idTecnico}")]
+        public async Task<ActionResult<ServicosDto>> AddTecnicoAoServico(int idServico, int idTecnico)
+        {
+            var servicoEditado = await _servicosService.AddTecnicoAoServico(idServico, idTecnico);
+            if (servicoEditado == null)
+                return null;
+            return Ok(servicoEditado);
+        }
+
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult> GetServicosByIdAsync(int id)
         {
             var servicosDto = await _servicosService.GetServicoByIdAsync(id);
+            if (servicosDto == null)
+                return NotFound();
+            return Ok(servicosDto);
+        }
+        [HttpGet]
+        [Route("getAll")]
+        public async Task<IActionResult> GetAllServicosAsync()
+        {
+            var servicosDto = await _servicosService.GetAllServicosAsync();
+            if (servicosDto == null)
+                return NotFound();
+            return Ok(servicosDto);
+        }
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteServicoAsync(int id)
+        {
+            var servicosDto = await _servicosService.DeleteServicoAsync(id);
             if (servicosDto == null)
                 return NotFound();
             return Ok(servicosDto);

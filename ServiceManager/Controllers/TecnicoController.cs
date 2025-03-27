@@ -61,6 +61,7 @@ namespace ServiceManager.Controllers
                 return NotFound();
             return Ok(tecnicoDto);
         }
+        
         [HttpDelete]
         [Route("{id}")]
         public async Task<IActionResult> DeleteTecnicoAsync(int id)

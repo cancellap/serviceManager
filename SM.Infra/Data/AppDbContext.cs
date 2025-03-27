@@ -87,6 +87,12 @@ namespace SM.Infra.Data
                       .HasForeignKey(st => st.TecnicoId);
             });
 
+            modelBuilder.Entity<ServicoTecnico>(entity =>
+            {
+                entity.HasKey(st => new { st.TecnicoId, st.ServicoId });
+            });
+
+
             modelBuilder.Entity<ServicoTecnico>()
                     .HasKey(ac => new { ac.TecnicoId, ac.ServicoId });
 
@@ -114,5 +120,6 @@ namespace SM.Infra.Data
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Tecnico> Tecnicos { get; set; }
         public DbSet<Servicos> Servicos { get; set; }
+        public DbSet<ServicoTecnico> ServicoTecnicos { get; set; }
     }
 }

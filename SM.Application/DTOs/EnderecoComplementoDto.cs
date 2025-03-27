@@ -15,7 +15,7 @@ namespace SM.Application.DTOs
         public string Complemento { get; set; }
         public EnderecoDto EnderecoDto { get; set; }
         [JsonIgnore]
-        public ClienteSemEnderecoDto? ClienteDto { get; set; }
+        public ClienteSemEnderecoInfosDbDto? ClienteDto { get; set; }
         [JsonIgnore]
         public TecnicoDto? TecnicoDto { get; set; }
     }

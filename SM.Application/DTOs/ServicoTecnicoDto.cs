@@ -9,7 +9,7 @@ namespace SM.Application.DTOs
     public  class ServicoTecnicoDto
     {
         //public int TecnicoId { get; set; }
-        public TecnicoDto TecnicoDto { get; set; }
+        public TecnicoSemEnderecoInfosDbDto TecnicoDto { get; set; }
         //public int ServicoId { get; set; }
     }
 }

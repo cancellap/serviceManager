@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SM.Domaiin.Entities
 {
-    public class ServicoTecnico 
+    public class ServicoTecnico
     {
         public int ServicoId { get; set; }
         public Servicos Servico { get; set; }

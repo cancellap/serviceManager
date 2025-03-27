@@ -72,7 +72,7 @@ namespace SM.Application.Service
 
         public async Task<IEnumerable<ClienteDto>> GetAllClientesAsync()
         {
-            var listaCliente = (await _clienteRepository.GetAllClientesAsync());
+            var listaCliente = await _clienteRepository.GetAllClientesAsync();
             if (listaCliente.Count == 0)
                 return null;
             var listaClientesDtos = _mapper.Map<IEnumerable<ClienteDto>>(listaCliente);
