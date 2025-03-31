@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SM.Application.DTOs;
+using SM.Application.Interfaces;
 using SM.Application.Service;
 using SM.Domaiin.Interfaces;
 
@@ -9,9 +10,9 @@ namespace ServiceManager.Controllers
     [Route("api/[controller]")]
     public class TecnicoController : ControllerBase
     {
-        private readonly TecnicoService _tecnicoService;
+        private readonly ITecnicoService _tecnicoService;
 
-        public TecnicoController(TecnicoService tecnicoService)
+        public TecnicoController(ITecnicoService tecnicoService)
         {
             _tecnicoService = tecnicoService;
         }
@@ -36,7 +37,7 @@ namespace ServiceManager.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetTecnicoByIdAsync(int id)
+        public async Task<ActionResult<ClienteDto>> GetTecnicoByIdAsync(int id)
         {
             var tecnicoDto = await _tecnicoService.GetTecnicoByIdAsync(id);
             if (tecnicoDto == null)
@@ -54,7 +55,7 @@ namespace ServiceManager.Controllers
         }
         [HttpGet]
         [Route("cpf/{cpf}")]
-        public async Task<IActionResult> GetTecnicoByCpfAsync(string cpf)
+        public async Task<ActionResult<TecnicoDto>> GetTecnicoByCpfAsync(string cpf)
         {
             var tecnicoDto = await _tecnicoService.GetTecnicoByCpfAsync(cpf);
             if (tecnicoDto == null)
@@ -64,7 +65,7 @@ namespace ServiceManager.Controllers
         
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> DeleteTecnicoAsync(int id)
+        public async Task<ActionResult<ClienteDto>> DeleteTecnicoAsync(int id)
         {
             var tecnicoDto = await _tecnicoService.DeleteTecnicoAsync(id);
             if (tecnicoDto == null)

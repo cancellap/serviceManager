@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SM.Application.DTOs;
+using SM.Application.Interfaces;
 using SM.Application.Service;
 using SM.Domaiin.Entities;
 
@@ -9,8 +10,8 @@ namespace ServiceManager.Controllers
     [Route("api/[controller]")]
     public class ServicosController : ControllerBase
     {
-        private readonly ServicosService _servicosService;
-        public ServicosController(ServicosService servicosService)
+        private readonly IServicosService _servicosService;
+        public ServicosController(IServicosService servicosService)
         {
             _servicosService = servicosService;
         }

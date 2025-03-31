@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Writers;
 using SM.Application.DTOs;
+using SM.Application.Interfaces;
 using SM.Application.Service;
 
 namespace ServiceManager.Controllers
@@ -9,9 +10,9 @@ namespace ServiceManager.Controllers
     [Route("api/[controller]")]
     public class ClienteController : ControllerBase
     {
-        private readonly ClienteService _clienteService;
+        private readonly IClienteService _clienteService;
 
-        public ClienteController(ClienteService clienteService)
+        public ClienteController(IClienteService clienteService)
         {
             _clienteService = clienteService;
         }
@@ -48,7 +49,7 @@ namespace ServiceManager.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetClienteByIdAsync(int id)
+        public async Task<ActionResult<ClienteDto>> GetClienteByIdAsync(int id)
         {
             var clienteDto = await _clienteService.GetClienteByIdAsync(id);
             if (clienteDto == null)
@@ -58,7 +59,7 @@ namespace ServiceManager.Controllers
 
         [HttpGet]
         [Route("cnpj/{cnpj}")]
-        public async Task<IActionResult> GetClienteByCnpjAsync(string cnpj)
+        public async Task<ActionResult<ClienteDto>> GetClienteByCnpjAsync(string cnpj)
         {
             var clienteDto = await _clienteService.GetClienteByCnpjAsync(cnpj);
             if (clienteDto == null)
@@ -68,7 +69,7 @@ namespace ServiceManager.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> DeleteClienteAsync(int id)
+        public async Task<ActionResult<ClienteDto>> DeleteClienteAsync(int id)
         {
             try
             {
