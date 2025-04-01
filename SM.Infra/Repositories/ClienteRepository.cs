@@ -36,6 +36,7 @@ namespace SM.Infra.Repositories
         public async Task<List<Cliente>> GetAllClientesAsync()
         {
             return await _dBContext.Clientes
+                .Where(c => c.IsDeleted == false)
                 .Include(c => c.EnderecoComplemento)
                     .ThenInclude(es => es.Endereco)
                 .ToListAsync();

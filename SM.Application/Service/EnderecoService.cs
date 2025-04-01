@@ -1,22 +1,12 @@
 ﻿using SM.Application.Interfaces;
 using SM.Domaiin.Entities;
-using SM.Infra.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SM.Domaiin.Interfaces;
 
 namespace SM.Application.Service
 {
-    public class EnderecoService : IEnderecoService
+    public class EnderecoService(IEnderecoRepository enderecoRepository) : IEnderecoService
     {
-        private readonly EnderecoRepository _enderecoRepository;
-
-        public EnderecoService(EnderecoRepository enderecoRepository)
-        {
-            _enderecoRepository = enderecoRepository;
-        }
+        private readonly IEnderecoRepository _enderecoRepository = enderecoRepository;
 
         public async Task<int> ObterOuCriarEnderecoAsync(Endereco endereco)
         {

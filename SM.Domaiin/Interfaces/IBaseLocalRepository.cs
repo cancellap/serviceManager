@@ -12,6 +12,6 @@ namespace SM.Domaiin.Interfaces
         Task<List<TEntity>> GetAll();
         Task<TEntity> FindOneId(int id);
         Task<TEntity> AddAsync(TEntity entity);
-        Task<TEntity> deleteAsync(TEntity entity);
+        Task<TEntity> DeleteAsync(TEntity entity);
     }
 }

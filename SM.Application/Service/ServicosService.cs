@@ -1,24 +1,19 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SM.Application.DTOs;
 using SM.Application.Interfaces;
 using SM.Domaiin.Entities;
+using SM.Domaiin.Interfaces;
 using SM.Infra.Repositories;
 
 namespace SM.Application.Service
 {
-    public class ServicosService : IServicosService
+    public class ServicosService(IServicosRepository servicosRepository, IMapper mapper, RabbitMQProducer rabbitMQProducer, ITecnicoService tecnicoService) : IServicosService
     {
-        private readonly ServicosRepository _servicosRepository;
-        private readonly IMapper _mapper;
-        private readonly RabbitMQProducer _rabbitMQProducer;
-        private readonly TecnicoRepository _tecnicoRepository;
-        public ServicosService(ServicosRepository servicosRepository, IMapper mapper, RabbitMQProducer rabbitMQProducer, TecnicoRepository tecnicoRepository)
-        {
-            _servicosRepository = servicosRepository;
-            _mapper = mapper;
-            _rabbitMQProducer = rabbitMQProducer;
-            _tecnicoRepository = tecnicoRepository;
-        }
+        private readonly IServicosRepository _servicosRepository = servicosRepository;
+        private readonly IMapper _mapper = mapper;
+        private readonly RabbitMQProducer _rabbitMQProducer = rabbitMQProducer;
+        private readonly ITecnicoService _tecnicoService = tecnicoService;
 
         public async Task<ServicosDto> CreateServicoAsync(ServicosCreateDto servicosCreateDto, int idCliente)
         {
@@ -36,8 +31,22 @@ namespace SM.Application.Service
 
             List<ServicoTecnico> servicoTecnicosList = [];
 
+
             foreach (var tecnicoId in servicosCreateDto.TecnicosIds)
             {
+                var tecnico = await _tecnicoService.GetTecnicoByIdAsync(tecnicoId);
+                if (tecnico.IsDeleted == true)
+                {
+                    throw new InvalidOperationException($"O técnico com ID {tecnico.Id} está com inativo no banco de dados do sistema.");
+                }
+
+                var servicoTecnicoExistente = await _servicosRepository.GetByIdsServicoTecnico(tecnicoId);
+
+                if (servicoTecnicoExistente != null)
+                {
+                    throw new InvalidOperationException($"O técnico com ID {servicoTecnicoExistente.TecnicoId} já está associado a outro serviço.");
+                }
+
                 var servicoTecnico = new ServicoTecnico
                 {
                     ServicoId = servicoCriado.Id,
@@ -49,21 +58,6 @@ namespace SM.Application.Service
             var servicoteste = await _servicosRepository.FindOneId(servicoCriado.Id);
             return _mapper.Map<ServicosDto>(servicoteste);
 
-            //var servicoTecnico = new ServicoTecnico
-            //{
-            //    ServicoId = servicoCriado.Id,
-            //    TecnicoId = 1
-            //}
-
-            //var mensagem = new ServicoMessageRabbitMQ
-            //{
-            //    ServicoId = servicoEntity.Id,
-            //    DescricaoServico = servicoEntity.Descricao,
-            //    NomeCliente = servicoEntity.Cliente.RazaoSocial,
-            //    EmailCliente = servicoEntity.Cliente.Email,
-            //    EmailsTecnicos = servicoEntity.servicoTecnicos.Select(st => st.Tecnico.Email).ToList()
-            //};
-            //_rabbitMQProducer.SendMessage(mensagem);
         }
         public async Task<ServicosDto> GetServicoByIdAsync(int id)
         {
@@ -76,7 +70,7 @@ namespace SM.Application.Service
         public async Task<ServicosDto> AddTecnicoAoServico(int idServico, int idTecnico)
         {
             var servico = await _servicosRepository.FindOneId(idServico);
-            var tecnico = await _tecnicoRepository.FindOneId(idTecnico);
+            var tecnico = await _tecnicoService.GetTecnicoByIdAsync(idTecnico);
 
             if (servico == null || tecnico == null)
                 return null;
@@ -84,17 +78,18 @@ namespace SM.Application.Service
             //servico.servicoTecnicos.Add(new ServicoTecnico { ServicoId = idServico, TecnicoId = idTecnico });
 
             await _servicosRepository.CreateServicoTecnicoAsync(new ServicoTecnico { ServicoId = idServico, TecnicoId = idTecnico });
-            await _servicosRepository.UpdateServicosAsync(servico);
+            await _servicosRepository.UpdateServicoAsync(servico);
 
             return _mapper.Map<ServicosDto>(servico);
         }
-        public async Task<IEnumerable<ServicosDto>> GetAllServicosAsync()
+        public async Task<List<ServicosDto>> GetAllServicosAsync()
         {
             var servicos = await _servicosRepository.GetAllAsync();
-            if (servicos == null)
+
+            if (servicos.Count == 0)
                 return null;
 
-            var servicosDto = _mapper.Map<IEnumerable<ServicosDto>>(servicos);
+            var servicosDto = _mapper.Map<List<ServicosDto>>(servicos);
             return servicosDto;
         }
         public async Task<ServicosDto> DeleteServicoAsync(int id)
@@ -105,5 +100,10 @@ namespace SM.Application.Service
             return _mapper.Map<ServicosDto>(servico);
         }
 
+        public async Task<List<ServicosDto>> GetServicosWithFilterAsync(ServicoFiltro filtro)
+        {
+            var servicos = await _servicosRepository.GetServicosWithFilterAsync(filtro);
+            return _mapper.Map<List<ServicosDto>>(servicos);
+        }
     }
 }

@@ -2,24 +2,16 @@
 using SM.Application.DTOs;
 using SM.Application.Interfaces;
 using SM.Domaiin.Entities;
-using SM.Infra.Repositories;
+using SM.Domaiin.Interfaces;
 
 namespace SM.Application.Service
 {
-    public class ClienteService : IClienteService
+    public class ClienteService(IClienteRepository clienteRepository, IEnderecoComplementoService enderecoComplementoService, IEnderecoService enderecoService, IMapper mapper) : IClienteService
     {
-        private readonly ClienteRepository _clienteRepository;
-        private readonly EnderecoComplementoRepository _enderecoComplementoRepository;
-        private readonly EnderecoService _enderecoService;
-        private readonly IMapper _mapper;
-
-        public ClienteService(ClienteRepository clienteRepository, EnderecoComplementoRepository enderecoComplementoRepository, EnderecoService enderecoService, IMapper mapper)
-        {
-            _clienteRepository = clienteRepository;
-            _enderecoComplementoRepository = enderecoComplementoRepository;
-            _enderecoService = enderecoService;
-            _mapper = mapper;
-        }
+        private readonly IClienteRepository _clienteRepository = clienteRepository;
+        private readonly IEnderecoComplementoService _enderecoComplementoService = enderecoComplementoService;
+        private readonly IEnderecoService _enderecoService = enderecoService;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<ClienteDto> CreateClienteAsync(ClienteCreateDto clienteCreateDto)
         {
@@ -36,6 +28,7 @@ namespace SM.Application.Service
                 throw new InvalidOperationException("Erro ao obter ou criar o endereço.");
 
             var clienteCriado = await _clienteRepository.AddAsync(clienteEntity);
+            clienteCriado.EnderecoComplemento = null;
 
             var enderecoComplemento = new EnderecoComplemento
             {
@@ -45,8 +38,9 @@ namespace SM.Application.Service
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false
             };
+
             Console.WriteLine("EnderecoComplemento: " + enderecoComplemento.EnderecoId + "  -  " + enderecoComplemento.Id + "  -  " + enderecoComplemento.ClienteId);
-            await _enderecoComplementoRepository.AddAsync(enderecoComplemento);
+            await _enderecoComplementoService.CreateEnderecoComplementoAsync(enderecoComplemento);
 
             clienteCriado.EnderecoComplemento = enderecoComplemento;
             await _clienteRepository.updateClienteAsync(clienteCriado);
@@ -63,8 +57,8 @@ namespace SM.Application.Service
             if (cliente == null)
                 throw new Exception("Cliente não encontrado");
 
-            var clienteExcluido = await _clienteRepository.deleteAsync(cliente);
-            await _enderecoComplementoRepository.deleteAsync(enderecoComplemento);
+            var clienteExcluido = await _clienteRepository.DeleteAsync(cliente);
+            await _enderecoComplementoService.DeleteAsync(enderecoComplemento.Id);
 
             return _mapper.Map<ClienteDto>(clienteExcluido);
 

@@ -35,6 +35,17 @@ namespace ServiceManager.Controllers
                 return StatusCode(500, $"Erro ao criar serviço: {ex.Message}");
             }
         }
+
+        [HttpGet]
+        [Route("getServicosWithFilter")]
+        public async Task<ActionResult<List<ServicosDto>>> GetServicosWithFilterAsync([FromBody] ServicoFiltro filtro)
+        {
+            var servicosDto = await _servicosService.GetServicosWithFilterAsync(filtro);
+            if (servicosDto == null)
+                return NotFound();
+            return Ok(servicosDto);
+        }
+
         [HttpPatch]
         [Route("{idServico}/{idTecnico}")]
         public async Task<ActionResult<ServicosDto>> AddTecnicoAoServico(int idServico, int idTecnico)
@@ -47,7 +58,7 @@ namespace ServiceManager.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetServicosByIdAsync(int id)
+        public async Task<ActionResult<Servicos>> GetServicosByIdAsync(int id)
         {
             var servicosDto = await _servicosService.GetServicoByIdAsync(id);
             if (servicosDto == null)
@@ -56,7 +67,7 @@ namespace ServiceManager.Controllers
         }
         [HttpGet]
         [Route("getAll")]
-        public async Task<IActionResult> GetAllServicosAsync()
+        public async Task<ActionResult<List<Servicos>>> GetAllServicosAsync()
         {
             var servicosDto = await _servicosService.GetAllServicosAsync();
             if (servicosDto == null)
@@ -65,7 +76,7 @@ namespace ServiceManager.Controllers
         }
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> DeleteServicoAsync(int id)
+        public async Task<ActionResult<Servicos>> DeleteServicoAsync(int id)
         {
             var servicosDto = await _servicosService.DeleteServicoAsync(id);
             if (servicosDto == null)

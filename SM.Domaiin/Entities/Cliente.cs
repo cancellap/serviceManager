@@ -18,26 +18,6 @@ namespace SM.Domaiin.Entities
         [InverseProperty("Cliente")]
         public EnderecoComplemento? EnderecoComplemento { get; set; }
         public List<Servicos>? Servicos { get; set; }
-
-        public Cliente() { }
-
-        public Cliente(Cliente c)
-        {
-            ValidateDomain(c);
-            NomeFantasia = c.NomeFantasia;
-            RazaoSocial = c.RazaoSocial;
-            Email = c.Email;
-            Cnpj = c.Cnpj;
-            EnderecoComplemento = c.EnderecoComplemento;
-
-        }
-        private static void ValidateDomain(Cliente c)
-        {
-            DomainExceptionValidation.When(string.IsNullOrEmpty(c.NomeFantasia), "Nome é obrigatório");
-            DomainExceptionValidation.When(string.IsNullOrEmpty(c.Email), "Email é obrigatório");
-            DomainExceptionValidation.When(string.IsNullOrEmpty(c.Cnpj), "Cnpj é obrigatório");
-            DomainExceptionValidation.When(!ValidaCnpj.IsCnpj(c.Cnpj), "Cnpj inválido");
-            DomainExceptionValidation.When(c.EnderecoComplemento == null, "Endereço é obrigatório");
-        }
+       
     }
 }

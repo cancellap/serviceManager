@@ -18,6 +18,7 @@ namespace SM.Infra.Repositories
         }
         public async Task<Tecnico?> GetTecnicoByCpfAsync(string cpf)
         {
+
             var tecnico = await _dBContext.Tecnicos
                .Where(c => c.Cpf == cpf)
                .Include(c => c.EnderecoComplemento)
@@ -40,6 +41,7 @@ namespace SM.Infra.Repositories
         public async Task<List<Tecnico>> GetAllTecnicosAsync()
         {
             return await _dBContext.Tecnicos
+                .Where(c => c.IsDeleted == false)
                 .Include(c => c.EnderecoComplemento)
                     .ThenInclude(es => es.Endereco)
                 .ToListAsync();
@@ -50,5 +52,14 @@ namespace SM.Infra.Repositories
             await _dBContext.SaveChangesAsync();
             return tecnico;
         }
+        public async Task<Tecnico> DeleteAsync(Tecnico tecnico)
+        {
+            tecnico.DeletedAt = DateTime.UtcNow;
+            tecnico.IsDeleted = true;
+            await _dBContext.SaveChangesAsync();
+            return tecnico;
+        }
+
+
     }
 }

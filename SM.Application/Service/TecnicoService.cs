@@ -2,24 +2,17 @@
 using SM.Application.DTOs;
 using SM.Application.Interfaces;
 using SM.Domaiin.Entities;
+using SM.Domaiin.Interfaces;
 using SM.Infra.Repositories;
 
 namespace SM.Application.Service
 {
-    public class TecnicoService : ITecnicoService
+    public class TecnicoService(IEnderecoComplementoService enderecoComplementoService, ITecnicoRepository tecnicoRepository, IMapper mapper, IEnderecoService enderecoService) : ITecnicoService
     {
-        private readonly TecnicoRepository _tecnicoRepository;
-        private readonly IMapper _mapper;
-        private readonly EnderecoService _enderecoService;
-        private readonly EnderecoComplementoRepository _enderecoComplementoRepository;
-
-        public TecnicoService(TecnicoRepository tecnicoRepository, IMapper mapper, EnderecoService enderecoService, EnderecoComplementoRepository enderecoComplementoRepository)
-        {
-            _tecnicoRepository = tecnicoRepository;
-            _mapper = mapper;
-            _enderecoService = enderecoService;
-            _enderecoComplementoRepository = enderecoComplementoRepository;
-        }
+        private readonly ITecnicoRepository _tecnicoRepository = tecnicoRepository;
+        private readonly IEnderecoComplementoService _enderecoComplementoService = enderecoComplementoService;
+        private readonly IMapper _mapper = mapper;
+        private readonly IEnderecoService _enderecoService = enderecoService;
 
         public async Task<TecnicoDto> CreateTecnicoAsync(TecnicoCreateDto tecnicoCreateDto)
         {
@@ -47,7 +40,7 @@ namespace SM.Application.Service
                 IsDeleted = false
             };
 
-            await _enderecoComplementoRepository.AddAsync(enderecoComplemento);
+            await _enderecoComplementoService.CreateEnderecoComplementoAsync(enderecoComplemento);
             tecnicoCriado.EnderecoComplemento = enderecoComplemento;
 
             await _tecnicoRepository.updateTecnicoAsync(tecnicoCriado);
@@ -74,6 +67,7 @@ namespace SM.Application.Service
             var tecnicoDto = _mapper.Map<TecnicoDto>(tecnico);
             return tecnicoDto;
         }
+
         public async Task<TecnicoDto> GetTecnicoByCpfAsync(string cpf)
         {
             var tecnico = await _tecnicoRepository.GetTecnicoByCpfAsync(cpf);
@@ -92,8 +86,8 @@ namespace SM.Application.Service
             if (tecnico == null)
                 throw new Exception("Cliente não encontrado");
 
-            var tecnicoExcluido = await _tecnicoRepository.deleteAsync(tecnico);
-            await _enderecoComplementoRepository.deleteAsync(enderecoSede);
+            var tecnicoExcluido = await _tecnicoRepository.DeleteAsync(tecnico);
+            await _enderecoComplementoService.DeleteAsync(enderecoSede.Id);
 
             return _mapper.Map<TecnicoDto>(tecnicoExcluido);
         }

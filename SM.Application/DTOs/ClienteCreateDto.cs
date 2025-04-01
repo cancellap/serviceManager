@@ -19,6 +19,7 @@ namespace SM.Application.DTOs
         public string NomeFantasia { get; set; }
 
         [Required(ErrorMessage = "O E-mail é obrigatório")]
+        [EmailAddress(ErrorMessage = "E-mail inválido")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "O CNPJ é obrigatório")]

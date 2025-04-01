@@ -16,38 +16,23 @@ namespace SM.Infra.Repositories
         public async Task<Servicos> CreateServicoAsync(Servicos servico)
         {
             servico.CreatedAt = DateTime.UtcNow;
-
-
-            if (servico.servicoTecnicos != null && servico.servicoTecnicos.Any())
-            {
-                foreach (var servicoTecnico in servico.servicoTecnicos)
-                {
-                    var tecnicoExistente = await _dBContext.ServicoTecnicos
-                                                   .FirstOrDefaultAsync(st => st.TecnicoId == servicoTecnico.TecnicoId
-                                                                                && st.ServicoId != servico.Id);
-
-                    if (tecnicoExistente != null)
-                    {
-                        throw new InvalidOperationException($"O técnico com ID {servicoTecnico.TecnicoId} já está associado a outro serviço.");
-                    }
-
-                    servicoTecnico.ServicoId = servico.Id;
-
-                    await _dBContext.ServicoTecnicos.AddAsync(servicoTecnico);
-                }
-
-            }
             await _dBContext.Servicos.AddAsync(servico);
             await _dBContext.SaveChangesAsync();
             await _dBContext.SaveChangesAsync();
 
             return servico;
         }
-        public async Task<Servicos> UpdateServicosAsync(Servicos servico)
+        public async Task<Servicos> UpdateServicoAsync(Servicos servico)
         {
             _dBContext.Servicos.Update(servico);
             await _dBContext.SaveChangesAsync();
             return servico;
+        }
+
+        public async Task<ServicoTecnico> GetByIdsServicoTecnico(int idTecnico)
+        {
+            var servicoTecnico = await _dBContext.ServicoTecnicos.FirstOrDefaultAsync(st => st.TecnicoId == idTecnico);
+            return servicoTecnico;
         }
 
         public async Task<ServicoTecnico> CreateServicoTecnicoAsync(ServicoTecnico servicoTecnico)
@@ -68,7 +53,7 @@ namespace SM.Infra.Repositories
                 .FirstOrDefaultAsync(s => s.Id == id);
 
         }
-        public async Task<IEnumerable<Servicos>> GetAllAsync()
+        public async Task<List<Servicos>> GetAllAsync()
         {
             return await _dBContext.Servicos
                 .AsNoTracking()
@@ -97,5 +82,18 @@ namespace SM.Infra.Repositories
             await _dBContext.SaveChangesAsync();
             return servico;
         }
+
+        public async Task<List<Servicos>> GetServicosWithFilterAsync(ServicoFiltro filtro)
+        {
+            var servicos = await _dBContext.Servicos
+                .Where(s => s.ClienteId.Equals(filtro.ClienteId))  
+                .Where(s => s.servicoTecnicos.Any(st => filtro.TecnicosIds.Contains(st.TecnicoId))) 
+                .Include(s => s.servicoTecnicos)  
+                    .ThenInclude(st => st.Tecnico)
+                .ToListAsync();
+
+            return servicos;
+        }
+
     }
 }
