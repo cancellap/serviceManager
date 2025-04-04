@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Newtonsoft.Json;
-using SM.Domaiin.Entities;
+using SM.Application.DTOs;
 
 
 namespace SM.Workers.Services

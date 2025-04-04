@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SM.Domaiin.Entities
+namespace SM.Application.DTOs
 {
     public  class ServicoMessageRabbitMQ
     {

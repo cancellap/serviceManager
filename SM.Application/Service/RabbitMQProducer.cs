@@ -1,7 +1,7 @@
 ﻿using RabbitMQ.Client;
-using SM.Domaiin.Entities;
 using System.Text;
 using Newtonsoft.Json;
+using SM.Application.DTOs;
 
 namespace SM.Application.Service
 {
