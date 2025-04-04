@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SM.Domaiin.Validation
 {
-    class ValidaCnpj
+    public class ValidaCnpj
     {
         public static bool IsCnpj(string cnpj)
         {

@@ -3,6 +3,7 @@ using SM.Application.DTOs;
 using SM.Application.Interfaces;
 using SM.Domaiin.Entities;
 using SM.Domaiin.Interfaces;
+using SM.Domaiin.Validation;
 
 namespace SM.Application.Service
 {
@@ -18,6 +19,11 @@ namespace SM.Application.Service
             var clienteExistente = await _clienteRepository.GetClienteByCnpjAsync(clienteCreateDto.Cnpj);
             if (clienteExistente != null)
                 throw new InvalidOperationException("Cliente já cadastrado");
+
+            if (ValidaCnpj.IsCnpj(clienteCreateDto.Cnpj))
+            {
+                throw new InvalidOperationException("CNPJ inválido");
+            }
 
             var clienteEntity = _mapper.Map<Cliente>(clienteCreateDto);
             clienteEntity.EnderecoComplemento = null;
