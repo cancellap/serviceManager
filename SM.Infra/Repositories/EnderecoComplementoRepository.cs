@@ -17,20 +17,20 @@ namespace SM.Infra.Repositories
         public EnderecoComplementoRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
-        public async Task<EnderecoComplemento> AddAsync(EnderecoComplemento enderecoComplemento)
-        {
-            await _dBContext.EnderecoComplementos.AddAsync(enderecoComplemento);
-            await _dBContext.SaveChangesAsync();
-            return enderecoComplemento;
-        }
+        //public async Task<EnderecoComplemento> AddAsync(EnderecoComplemento enderecoComplemento)
+        //{
+        //    await _dBContext.EnderecoComplementos.AddAsync(enderecoComplemento);
+        //    await _dBContext.SaveChangesAsync();
+        //    return enderecoComplemento;
+        //}
 
-        public async Task<EnderecoComplemento> DeleteAsync(EnderecoComplemento enderecoComplemento)
-        {
-            enderecoComplemento.DeletedAt = DateTime.UtcNow;
-            enderecoComplemento.IsDeleted = true;
-            await _dBContext.SaveChangesAsync();
-            return enderecoComplemento;
-        }
+        //public async Task<EnderecoComplemento> DeleteAsync(EnderecoComplemento enderecoComplemento)
+        //{
+        //    enderecoComplemento.DeletedAt = DateTime.UtcNow;
+        //    enderecoComplemento.IsDeleted = true;
+        //    await _dBContext.SaveChangesAsync();
+        //    return enderecoComplemento;
+        //}
 
         public async Task<EnderecoComplemento> GetByIdEnderecoComplementoAsync(int id)
         {
@@ -40,7 +40,7 @@ namespace SM.Infra.Repositories
         public async Task<EnderecoComplemento>  UpdateEnderecoComplementoAsync(EnderecoComplemento enderecoComplemento)
         {
             _dBContext.EnderecoComplementos.Update(enderecoComplemento);
-            await _dBContext.SaveChangesAsync();
+            //await _dBContext.SaveChangesAsync();
             return enderecoComplemento;
         }
     }

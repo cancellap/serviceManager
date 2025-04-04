@@ -18,14 +18,14 @@ namespace SM.Infra.Repositories
             servico.CreatedAt = DateTime.UtcNow;
             await _dBContext.Servicos.AddAsync(servico);
             await _dBContext.SaveChangesAsync();
-            await _dBContext.SaveChangesAsync();
+            //await _dBContext.SaveChangesAsync();
 
             return servico;
         }
         public async Task<Servicos> UpdateServicoAsync(Servicos servico)
         {
             _dBContext.Servicos.Update(servico);
-            await _dBContext.SaveChangesAsync();
+            //await _dBContext.SaveChangesAsync();
             return servico;
         }
 
@@ -35,10 +35,13 @@ namespace SM.Infra.Repositories
             return servicoTecnico;
         }
 
+      
+
+
         public async Task<ServicoTecnico> CreateServicoTecnicoAsync(ServicoTecnico servicoTecnico)
         {
             await _dBContext.ServicoTecnicos.AddAsync(servicoTecnico);
-            await _dBContext.SaveChangesAsync();
+            //await _dBContext.SaveChangesAsync();
             return servicoTecnico;
         }
 
@@ -79,8 +82,20 @@ namespace SM.Infra.Repositories
             servico.IsAtivo = false;
             servico.DeletedAt = DateTime.UtcNow;
             servico.IsDeleted = true;
-            await _dBContext.SaveChangesAsync();
+            //await _dBContext.SaveChangesAsync();
             return servico;
+        }
+
+        public async Task<List<ServicoTecnico>> GetAllByServicoIdAsync(int servicoId)
+        {
+            return await _dBContext.ServicoTecnicos
+                .Where(st => st.ServicoId == servicoId)
+                .ToListAsync();
+        }
+
+        public void DeleteServicoTecnicos(List<ServicoTecnico> servicoTecnicos)
+        {
+            _dBContext.ServicoTecnicos.RemoveRange(servicoTecnicos);
         }
 
         public async Task<List<Servicos>> GetServicosWithFilterAsync(ServicoFiltro filtro)

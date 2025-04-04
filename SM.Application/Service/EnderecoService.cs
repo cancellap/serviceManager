@@ -4,17 +4,17 @@ using SM.Domaiin.Interfaces;
 
 namespace SM.Application.Service
 {
-    public class EnderecoService(IEnderecoRepository enderecoRepository) : IEnderecoService
+    public class EnderecoService(IUnitOfWork unitOfWork) : IEnderecoService
     {
-        private readonly IEnderecoRepository _enderecoRepository = enderecoRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<int> ObterOuCriarEnderecoAsync(Endereco endereco)
         {
             if (endereco == null)
                 return 0;
 
-            var enderecoExistente = await _enderecoRepository.
-                GetEnderecoByDetailsAsync(endereco.Rua, endereco.Cidade, endereco.Estado, endereco.Cep);
+            var enderecoExistente = await _unitOfWork.EnderecoRepository
+                .GetEnderecoByDetailsAsync(endereco.Rua, endereco.Cidade, endereco.Estado, endereco.Cep);
 
             if (enderecoExistente != null)
             {
@@ -22,7 +22,8 @@ namespace SM.Application.Service
                 return enderecoExistente.Id;
             }
 
-            await _enderecoRepository.AddAsync(endereco);
+            await _unitOfWork.EnderecoRepository.AddAsync(endereco);
+            await _unitOfWork.CommitAsync();
 
             Console.WriteLine("Endereco criado: " + endereco.Id);
             return endereco.Id;

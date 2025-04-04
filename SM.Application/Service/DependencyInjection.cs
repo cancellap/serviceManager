@@ -29,6 +29,7 @@ public static class DependencyInjection
         services.AddScoped<EnderecoService>();
         services.AddScoped<IEnderecoService, EnderecoService>();  // EnderecoService antes
         services.AddScoped<IEnderecoComplementoService, EnderecoComplementoService>();  // EnderecoComplementoService antes
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // Serviços que dependem das dependências acima
         services.AddScoped<IClienteService, ClienteService>();  // ClienteService que depende de EnderecoComplementoService

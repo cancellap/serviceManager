@@ -18,5 +18,8 @@ namespace SM.Domaiin.Interfaces
         public Task<ServicoTecnico> GetByIdsServicoTecnico(int idTecnico);
         public Task<Servicos> DeleteServicoAsync(int id);
         public Task<List<Servicos>> GetServicosWithFilterAsync(ServicoFiltro filtro);
+        Task<List<ServicoTecnico>> GetAllByServicoIdAsync(int servicoId);
+        void DeleteServicoTecnicos(List<ServicoTecnico> servicoTecnicos);
+
     }
 }

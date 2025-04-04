@@ -20,7 +20,7 @@ namespace SM.Infra.Repositories.Base
         {
             entity.CreatedAt = DateTime.UtcNow;
             await _dBContext.Set<TEntity>().AddAsync(entity);
-            await _dBContext.SaveChangesAsync();
+            //await _dBContext.SaveChangesAsync();
             return entity;
         }
 
@@ -44,7 +44,7 @@ namespace SM.Infra.Repositories.Base
             entity.DeletedAt = DateTime.UtcNow;
             entity.IsDeleted = true;
             _dBContext.Set<TEntity>().Update(entity);
-            await _dBContext.SaveChangesAsync();
+            //await _dBContext.SaveChangesAsync();
             return entity;
         }
     }

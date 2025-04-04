@@ -23,12 +23,12 @@ namespace SM.Infra.Repositories
         }
 
         
-        public async Task<Endereco> AddAsync(Endereco endereco)
-        {
-            endereco.CreatedAt = DateTime.UtcNow;
-            await _dBContext.Enderecos.AddAsync(endereco);
-            await _dBContext.SaveChangesAsync();
-            return endereco;
-        }
+        //public async Task<Endereco> AddAsync(Endereco endereco)
+        //{
+        //    endereco.CreatedAt = DateTime.UtcNow;
+        //    await _dBContext.Enderecos.AddAsync(endereco);
+        //    await _dBContext.SaveChangesAsync();
+        //    return endereco;
+        //}
     }
 }
