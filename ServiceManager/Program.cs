@@ -16,7 +16,8 @@ builder.Services.AddAutoMapper(typeof(ClienteMappingProfile),
                       typeof(EnderecoComplementoMappingProfile),
                       typeof(EnderecoMappingProfile),
                       typeof(TecnicoMappingProfile),
-                      typeof(ServicoMappingProfile));
+                      typeof(ServicoMappingProfile),
+                      typeof(UsuarioMappingProfile));
 
 builder.Services.AddSwaggerGen();
 var producer = new RabbitMQProducer();
@@ -38,6 +39,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();
+    ScriptInitializer.Initialize(dbContext);
 }
 
 app.Run();

@@ -23,10 +23,10 @@ public static class DependencyInjection
         services.AddScoped<ITecnicoRepository, TecnicoRepository>();
         services.AddScoped<IServicosRepository, ServicosRepository>();
         services.AddScoped<IEnderecoComplementoRepository, EnderecoComplementoRepository>();
+        services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
         // Services (Registrar as dependências primeiro)
-        services.AddScoped<EnderecoComplementoService>();
-        services.AddScoped<EnderecoService>();
+        services.AddScoped<IEnderecoService, EnderecoService>();
         services.AddScoped<IEnderecoService, EnderecoService>();  // EnderecoService antes
         services.AddScoped<IEnderecoComplementoService, EnderecoComplementoService>();  // EnderecoComplementoService antes
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -35,7 +35,7 @@ public static class DependencyInjection
         services.AddScoped<IClienteService, ClienteService>();  // ClienteService que depende de EnderecoComplementoService
         services.AddScoped<ITecnicoService, TecnicoService>();  // TecnicoService que depende de EnderecoService
         services.AddScoped<IServicosService, ServicosService>();
-        services.AddScoped<TecnicoService>();
+        services.AddScoped<IUsuarioService, UsuarioService>();
 
         // Controllers & API Setup
         services.AddControllers().AddJsonOptions(options => 

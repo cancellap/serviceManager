@@ -13,6 +13,7 @@ namespace SM.Domaiin.Interfaces
         IEnderecoComplementoRepository EnderecoComplementoRepository { get; }
         IEnderecoRepository EnderecoRepository { get; }
         IServicosRepository ServicosRepository { get; }
+        IUsuarioRepository UsuarioRepository { get; }
 
         void Commit();
         Task CommitAsync();

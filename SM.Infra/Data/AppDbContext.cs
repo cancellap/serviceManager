@@ -113,6 +113,38 @@ namespace SM.Infra.Data
                       .WithMany(a => a.servicoTecnicos)
                       .HasForeignKey(st => st.ServicoId);
             });
+
+            modelBuilder.Entity<UsuarioRole>(entity =>
+            {
+                entity.HasKey(ur => new { ur.UsuarioId, ur.RoleId });
+
+                entity.HasOne(ur => ur.Usuario)
+                      .WithMany(u => u.UsuarioRoles)
+                      .HasForeignKey(ur => ur.UsuarioId);
+
+                entity.HasOne(ur => ur.Role)
+                      .WithMany(r => r.UsuarioRoles)
+                      .HasForeignKey(ur => ur.RoleId);
+            });
+
+            modelBuilder.Entity<Usuario>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+                entity.Property(u => u.Username).IsRequired();
+                entity.Property(u => u.Password).IsRequired();
+                entity.HasMany(u => u.UsuarioRoles)
+                      .WithOne(ur => ur.Usuario)
+                      .HasForeignKey(ur => ur.UsuarioId);
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+                entity.Property(r => r.Nome).IsRequired();
+                entity.HasMany(r => r.UsuarioRoles)
+                      .WithOne(ur => ur.Role)
+                      .HasForeignKey(ur => ur.RoleId);
+            });
         }
 
         public DbSet<Cliente> Clientes { get; set; }
@@ -121,5 +153,8 @@ namespace SM.Infra.Data
         public DbSet<Tecnico> Tecnicos { get; set; }
         public DbSet<Servicos> Servicos { get; set; }
         public DbSet<ServicoTecnico> ServicoTecnicos { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<UsuarioRole> UsuarioRoles { get; set; }
+        public DbSet<Role> Roles { get; set; }
     }
 }

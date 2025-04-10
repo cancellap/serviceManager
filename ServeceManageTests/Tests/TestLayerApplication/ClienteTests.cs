@@ -11,6 +11,7 @@ namespace ServeceManageTests.Tests.TestLayerApplication
 {
     public class ClienteTests
     {
+        private readonly Mock<IUnitOfWork> _mockUnitOfWork;
         private readonly Mock<IClienteRepository> _mockClienteRepository;
         private readonly Mock<IEnderecoComplementoService> _mockEnderecoComplementoService;
         private readonly Mock<IEnderecoService> _mockEnderecoService;
@@ -19,18 +20,23 @@ namespace ServeceManageTests.Tests.TestLayerApplication
 
         public ClienteTests()
         {
+            _mockUnitOfWork = new Mock<IUnitOfWork>();
             _mockClienteRepository = new Mock<IClienteRepository>();
             _mockEnderecoComplementoService = new Mock<IEnderecoComplementoService>();
             _mockEnderecoService = new Mock<IEnderecoService>();
             _mockMapper = new Mock<IMapper>();
 
+            // setup para retornar o mock do IClienteRepository
+            _mockUnitOfWork.Setup(u => u.ClienteRepository).Returns(_mockClienteRepository.Object);
+
             _clienteService = new ClienteService(
-                _mockClienteRepository.Object,
+                _mockMapper.Object,
+                _mockUnitOfWork.Object,
                 _mockEnderecoComplementoService.Object,
-                _mockEnderecoService.Object,
-                _mockMapper.Object
+                _mockEnderecoService.Object
             );
         }
+
 
         [Fact]
         public async Task GetAllClientesAsync_DeveRetornarClientesQuandoExistem()

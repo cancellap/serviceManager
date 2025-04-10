@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SM.Infra.Data;
@@ -11,9 +12,11 @@ using SM.Infra.Data;
 namespace SM.Infra.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250407142339_addTebelaDeUsuario")]
+    partial class addTebelaDeUsuario
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,23 +165,6 @@ namespace SM.Infra.Migrations
                     b.ToTable("EnderecoComplementos");
                 });
 
-            modelBuilder.Entity("SM.Domaiin.Entities.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
             modelBuilder.Entity("SM.Domaiin.Entities.ServicoTecnico", b =>
                 {
                     b.Property<int>("TecnicoId")
@@ -289,6 +275,10 @@ namespace SM.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string[]>("Roles")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -299,21 +289,6 @@ namespace SM.Infra.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
-                });
-
-            modelBuilder.Entity("SM.Domaiin.Entities.UsuarioRole", b =>
-                {
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UsuarioId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UsuarioRoles");
                 });
 
             modelBuilder.Entity("SM.Domaiin.Entities.EnderecoComplemento", b =>
@@ -370,35 +345,11 @@ namespace SM.Infra.Migrations
                     b.Navigation("Cliente");
                 });
 
-            modelBuilder.Entity("SM.Domaiin.Entities.UsuarioRole", b =>
-                {
-                    b.HasOne("SM.Domaiin.Entities.Role", "Role")
-                        .WithMany("UsuarioRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SM.Domaiin.Entities.Usuario", "Usuario")
-                        .WithMany("UsuarioRoles")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("SM.Domaiin.Entities.Cliente", b =>
                 {
                     b.Navigation("EnderecoComplemento");
 
                     b.Navigation("Servicos");
-                });
-
-            modelBuilder.Entity("SM.Domaiin.Entities.Role", b =>
-                {
-                    b.Navigation("UsuarioRoles");
                 });
 
             modelBuilder.Entity("SM.Domaiin.Entities.Servicos", b =>
@@ -411,11 +362,6 @@ namespace SM.Infra.Migrations
                     b.Navigation("EnderecoComplemento");
 
                     b.Navigation("servicoTecnicos");
-                });
-
-            modelBuilder.Entity("SM.Domaiin.Entities.Usuario", b =>
-                {
-                    b.Navigation("UsuarioRoles");
                 });
 #pragma warning restore 612, 618
         }

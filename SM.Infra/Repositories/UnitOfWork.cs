@@ -10,13 +10,23 @@ namespace SM.Infra.Repositories
         private IEnderecoComplementoRepository? _enderecoComplementoRepository;
         private IEnderecoRepository? _enderecoRepository;
         private IServicosRepository? _servicosRepository;
+        private IUsuarioRepository? _usuarioRepository;
         public AppDbContext _dBContext;
 
         public UnitOfWork(AppDbContext dbContext)
         {
             _dBContext = dbContext;
         }
+
+
         //lazy loading: adiar a abtenção do objeto até o momento em que ele for realmente necessário
+        public IUsuarioRepository UsuarioRepository
+        {
+            get
+            {
+                return _usuarioRepository = _usuarioRepository ?? new UsuarioRepository(_dBContext);
+            }
+        }
         public IClienteRepository ClienteRepository
         {
             get
