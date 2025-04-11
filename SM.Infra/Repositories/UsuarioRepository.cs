@@ -1,4 +1,6 @@
-﻿using SM.Domaiin.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
+using SM.Domaiin.Entities;
 using SM.Domaiin.Interfaces;
 using SM.Infra.Data;
 using SM.Infra.Repositories.Base;
@@ -13,7 +15,10 @@ namespace SM.Infra.Repositories
         }
         public async Task<Usuario?> GetByUsername(string username)
         {
-            var usuario = _dBContext.Usuarios.FirstOrDefault(u => u.Username == username);
+            var usuario = await _dBContext.Usuarios.Where(user => user.Username == username)
+                    .Include(user => user.UsuarioRoles)
+                    .ThenInclude(username => username.Role).
+                FirstOrDefaultAsync();
             return usuario;
         }
         public async Task<Usuario> AddAsync(Usuario entity)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SM.Application.DTOs;
+using SM.Application.Interfaces;
 using SM.Domaiin.Entities;
 using SM.Domaiin.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,7 +10,7 @@ using System.Text;
 
 namespace SM.Application.Service
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
 
@@ -27,7 +28,7 @@ namespace SM.Application.Service
 
         public async Task<string> GenerateToken(LoginDto user)
         {
-            var userDataBase = await _usuarioRepository.GetByUsername(user.Username);
+            Usuario userDataBase = await _usuarioRepository.GetByUsername(user.Username);
             if (userDataBase == null || !BCrypt.Net.BCrypt.Verify(user.Password, userDataBase.Password))
             {
                 return string.Empty;
@@ -38,16 +39,21 @@ namespace SM.Application.Service
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username),
+                new Claim("Username", user.Username),
                 new Claim("Id", userDataBase.Id.ToString())
             };
 
-            foreach (var userRole in userDataBase.UsuarioRoles)
+
+
+            foreach (UsuarioRole userRole in userDataBase.UsuarioRoles)
             {
                 var roleName = userRole.Role?.Nome;
                 if (!string.IsNullOrEmpty(roleName))
                 {
-                    claims.Add(new Claim(ClaimTypes.Role, roleName));
+                    Claim clain1 = (new Claim("RoleId", userRole.RoleId.ToString()));
+                    Claim clain2 = (new Claim("Role", roleName));
+
+                    claims.AddRange(new[] { clain1, clain2 });
                 }
             }
 
@@ -83,5 +89,6 @@ namespace SM.Application.Service
                 return 0;
             }
         }
+
     }
 }

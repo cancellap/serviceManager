@@ -36,6 +36,7 @@ public static class DependencyInjection
         services.AddScoped<ITecnicoService, TecnicoService>();  // TecnicoService que depende de EnderecoService
         services.AddScoped<IServicosService, ServicosService>();
         services.AddScoped<IUsuarioService, UsuarioService>();
+        services.AddScoped<ITokenService, TokenService>();
 
         // Controllers & API Setup
         services.AddControllers().AddJsonOptions(options => 

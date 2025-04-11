@@ -10,11 +10,13 @@ namespace SM.Application.Service
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
 
-        public UsuarioService(IMapper mapper, IUnitOfWork unitOfWork)
+        public UsuarioService(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
         }
 
 
@@ -27,7 +29,7 @@ namespace SM.Application.Service
             if (usuarioExistente != null)
                 throw new InvalidOperationException("Usuário já existe.");
 
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(usuarioCreateDto.Password);
+            var hashedPassword = _tokenService.HashPassword(usuarioCreateDto.Password);
 
             var usuario = new Usuario
             {

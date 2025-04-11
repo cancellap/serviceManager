@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SM.Domaiin.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,6 @@ namespace SM.Application.DTOs
         public bool IsDeleted { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public Dictionary<int, string> Roles { get; set; }
+        public List<UsuarioRoleDto> UsuarioRoles { get; set; }
     }
 }
